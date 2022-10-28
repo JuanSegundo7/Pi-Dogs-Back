@@ -8,14 +8,10 @@ const Dogs = {
             const {data} = await axios.get(`https://api.thedogapi.com/v1/breeds`,{headers:{"x-api-key": process.env.API_KEY}})
             var Dogs = await Dog.findAll({include: {model: Temperaments, attributes: ['name']}})
 
-            console.log(Dogs)
 
             if(name){
                 const filteredDog = data.filter(dog => dog.name.toLowerCase().includes(name.toLowerCase()))
                 var filteredDogDb = Dogs.filter(dog => dog.name.toLowerCase().includes(name.toLowerCase()))
-
-                console.log(filteredDog)
-                console.log(filteredDogDb)
 
                 if(filteredDog.length > 0){
                     
@@ -109,10 +105,9 @@ const Dogs = {
             
             const {data} = await axios.get(`https://api.thedogapi.com/v1/breeds`,{headers:{"x-api-key": process.env.API_KEY}})
             const filteredDog = data.filter(dog => dog.id == id)
-
-            
             
             let info = filteredDog.map((data) => {
+                console.log(data)
                 let temps = [data.temperament]
                 return {
                     id: data.id,
@@ -158,8 +153,6 @@ const Dogs = {
                 },
             });
 
-            console.log(dogCreated)
-
             await dogCreated[0].addTemperaments(temperamentDb);
 
             res.status(201).send("The dog has been created successfully")
@@ -168,6 +161,13 @@ const Dogs = {
             console.log(e)
             res.status(404).send("Error in some of the previewed values")
         }
+    },
+    delete: async (req, res) => {
+        const {id} = req.body
+
+        const deleted = await Dog.destroy({ where: { id: id } });
+
+        console.log(deleted)
     }
 }
 
