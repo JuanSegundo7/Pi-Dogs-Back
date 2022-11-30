@@ -164,9 +164,7 @@ const Dogs = {
     },
     delete: async (req, res) => {
         const {id} = req.body
-
         const deleted = await Dog.destroy({ where: { id: id } });
-
         console.log(deleted)
     }
 }
